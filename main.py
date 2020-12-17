@@ -2,6 +2,7 @@ import pygame as pg
 import sys
 from settings import *
 from sprites import *
+from map_render import *
 
 
 class Game:
@@ -14,20 +15,18 @@ class Game:
         self.load_data()
 
     def load_data(self):
-        self.map_data = []
-        with open('map.txt', 'rt') as map_file:
-            for line in map_file:
-                self.map_data.append(line)
+        self.map = Map('map.txt')
 
     def new(self):
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        for row, tiles in enumerate(self.map_data):
+        for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles):
                 if tile == 'w':
                     Wall(self, col, row)
                 elif tile == 'P':
                     self.player = Player(self, col, row)
+        self.camera = Camera(self.map.width, self.map.height)
 
     def run(self):
         self.playing = True
@@ -43,6 +42,7 @@ class Game:
 
     def update(self):
         self.all_sprites.update()
+        self.camera.update(self.player)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -53,7 +53,8 @@ class Game:
     def draw(self):
         self.screen.fill(BGCOLOR)
         self.draw_grid()
-        self.all_sprites.draw(self.screen)
+        for sprite in self.all_sprites:
+            self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
 
     def events(self):
