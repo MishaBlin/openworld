@@ -3,6 +3,7 @@ import sys
 from settings import *
 from sprites import *
 from map_render import *
+from os import *
 
 
 class Game:
@@ -15,17 +16,21 @@ class Game:
         self.load_data()
 
     def load_data(self):
-        self.map = Map('map.txt')
+        game_folder = path.dirname(__file__)
+        map_folder = path.join(game_folder, 'map')
+        self.map = TiledMap(path.join(map_folder, 'map.tmx'))
+        self.map_image = self.map.make_map()
+        self.map_rect = self.map_image.get_rect()
+        self.player_image = pg.image.load(PLAYER_IMAGE).convert_alpha()
 
     def new(self):
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        for row, tiles in enumerate(self.map.data):
-            for col, tile in enumerate(tiles):
-                if tile == 'w':
-                    Wall(self, col, row)
-                elif tile == 'P':
-                    self.player = Player(self, col, row)
+        for tile_object in self.map.tmxdata.objects:
+            if tile_object.name == 'player':
+                self.player = Player(self, tile_object.x, tile_object.y)
+            if tile_object.name == 'obstacle':
+                Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
         self.camera = Camera(self.map.width, self.map.height)
 
     def run(self):
@@ -51,8 +56,9 @@ class Game:
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
-        self.screen.fill(BGCOLOR)
-        self.draw_grid()
+        # self.screen.fill(BGCOLOR)
+        # self.draw_grid()
+        self.screen.blit(self.map_image, self.camera.apply_rect(self.map_rect))
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
@@ -72,7 +78,6 @@ class Game:
         pass
 
 
-# create the game object
 g = Game()
 g.show_start_screen()
 while True:

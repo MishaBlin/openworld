@@ -8,10 +8,10 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 
 # game settings
-WIDTH = 1280  # 16 * 64 or 32 * 32 or 64 * 16
-HEIGHT = 720  # 16 * 48 or 32 * 24 or 64 * 12
+WIDTH = 1280  # 16 * 64 or 32 * 32 or 64 * 16 40
+HEIGHT = 736  # 16 * 48 or 32 * 24 or 64 * 12 23
 FPS = 60
-TITLE = "Tilemap Demo"
+TITLE = "Openworld test"
 BGCOLOR = DARKGREY
 
 TILESIZE = 32
@@ -19,4 +19,5 @@ GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
 # Player settings
-PLAYER_SPEED = 500
+PLAYER_SPEED = 250
+PLAYER_IMAGE = 'hero1.png'
