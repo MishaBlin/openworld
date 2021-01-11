@@ -5,12 +5,21 @@ import pytweening as tween
 vec = pg.math.Vector2
 
 
+def __create_animation__(obj, speed, name):
+    obj.current_sprite += speed
+
+    if obj.current_sprite >= len(name):
+        obj.current_sprite = 0
+        obj.animate = False
+
+    obj.image = name[int(obj.current_sprite)]
+
+
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-
         self.animation = 'standing'
         self.animation_standing = game.standing_animation
         self.animation_right = game.moving_right
@@ -24,7 +33,6 @@ class Player(pg.sprite.Sprite):
         self.animation_down_right = game.moving_down_right
         self.house_animation = game.house
         self.housing_animation = game.housing_animation
-        self.reversed_housing = game.reversed_housing
         self.current_sprite = 0
         self.image = self.animation_right[self.current_sprite]
         self.animate = True
@@ -83,37 +91,35 @@ class Player(pg.sprite.Sprite):
                 self.animation = 'down_right'
 
         if self.a:
-            if keys[pg.K_LEFT] or keys[pg.K_a]:
+            if keys[pg.K_a]:
                 self.vel.x = -self.speed
                 self.animate = True
                 self.animation = 'left'
 
         if self.d:
-            if keys[pg.K_RIGHT] or keys[pg.K_d]:
+            if keys[pg.K_d]:
                 self.vel.x = self.speed
                 self.animate = True
                 self.animation = 'right'
         if self.s:
-            if keys[pg.K_DOWN] or keys[pg.K_s]:
+            if keys[pg.K_s]:
                 self.vel.y = self.speed
                 self.animate = True
                 self.animation = 'down'
         if self.w:
-            if keys[pg.K_UP] or keys[pg.K_w]:
+            if keys[pg.K_w]:
                 self.vel.y = -self.speed
                 self.animate = True
                 self.animation = 'forward'
 
         if keys[pg.K_SPACE]:
-            pg.time.wait(100)
+            pg.time.wait(150)
             self.in_house = not self.in_house
             if self.in_house:
                 self.w = False
                 self.s = False
                 self.a = False
                 self.d = False
-                self.vel.y = 0
-                self.vel.x = 0
                 self.animate = True
                 self.animation = 'housing'
 
@@ -156,34 +162,34 @@ class Player(pg.sprite.Sprite):
 
         if self.animate:
             if self.animation == 'right':
-                self.__create_animation__(0.05, self.animation_right)
+                __create_animation__(self, 0.05, self.animation_right)
 
             if self.animation == 'left':
-                self.__create_animation__(0.05, self.animation_left)
+                __create_animation__(self, 0.05, self.animation_left)
 
             if self.animation == 'forward':
-                self.__create_animation__(0.05, self.animation_forward)
+                __create_animation__(self, 0.05, self.animation_forward)
 
             if self.animation == 'forward_right':
-                self.__create_animation__(0.05, self.animation_forward_right)
+                __create_animation__(self, 0.05, self.animation_forward_right)
 
             if self.animation == 'forward_left':
-                self.__create_animation__(0.05, self.animation_forward_left)
+                __create_animation__(self, 0.05, self.animation_forward_left)
 
             if self.animation == 'standing':
-                self.__create_animation__(0.03, self.animation_standing)
+                __create_animation__(self, 0.03, self.animation_standing)
 
             if self.animation == 'down_left':
-                self.__create_animation__(0.05, self.animation_down_left)
+                __create_animation__(self, 0.05, self.animation_down_left)
 
             if self.animation == 'down_right':
-                self.__create_animation__(0.05, self.animation_down_right)
+                __create_animation__(self, 0.05, self.animation_down_right)
 
             if self.animation == 'down':
-                self.__create_animation__(0.05, self.animation_down)
+                __create_animation__(self, 0.05, self.animation_down)
 
             if self.animation == 'death':
-                self.__create_animation__(0.05, self.animation_death)
+                __create_animation__(self, 0.05, self.animation_death)
 
             if self.animation == 'housing':
                 self.current_sprite += 0.15
@@ -192,15 +198,6 @@ class Player(pg.sprite.Sprite):
                     self.current_sprite = len(self.housing_animation) - 1
 
                 self.image = self.housing_animation[int(self.current_sprite)]
-
-    def __create_animation__(self, speed, name):
-        self.current_sprite += speed
-
-        if self.current_sprite >= len(name):
-            self.current_sprite = 0
-            self.animate = False
-
-        self.image = name[int(self.current_sprite)]
 
 
 class Obstacle(pg.sprite.Sprite):

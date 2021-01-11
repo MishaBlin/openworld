@@ -6,25 +6,23 @@ LIGHTGREY = (100, 100, 100)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
-
 # game settings
-WIDTH = 1280  # 16 * 64 or 32 * 32 or 64 * 16 40
-HEIGHT = 736  # 16 * 48 or 32 * 24 or 64 * 12 23
 FPS = 60
-TITLE = "Openworld test"
-BGCOLOR = DARKGREY
-
+TITLE = "Snail simulator beta"
+ICON_IMAGE = 'icon.png'
+BG_IMAGE = 'background.png'
 TILESIZE = 32
-GRIDWIDTH = WIDTH / TILESIZE
-GRIDHEIGHT = HEIGHT / TILESIZE
 
 # Player settings
-PLAYER_SPEED = 100
-PLAYER_IMAGE = 'sprite_10.png'
+PLAYER_SPEED = 400
 
 # Items
 ITEMS_LAYER = 1
-SPEED_BY_APPLE = 10
+SPEED_BY_ITEM = 15
 BOB_RANGE = 15
 BOB_SPEED = 0.5
-ITEM_IMAGES = {'apple': 'apple.png'}
+ITEM_IMAGES = {'apple': 'apple.png',
+               'cherry': 'cherry.png'}
+
+# Sounds
+BG_MUSIC = 'lofi.mp3'
