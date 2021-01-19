@@ -2,6 +2,7 @@ import pygame as pg
 import pytmx
 
 
+# rendering tiled map using pytmx
 class TiledMap:
     def __init__(self, filename):
         tm = pytmx.load_pygame(filename, pixelalpha=True)
@@ -27,6 +28,7 @@ class TiledMap:
         return temp_surface
 
 
+# making camera
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width, height)
@@ -41,6 +43,7 @@ class Camera:
     def apply_rect(self, rect):
         return rect.move(self.camera.topleft)
 
+    # updating camera
     def update(self, target):
         x = -target.rect.x + int(self.sizes[0] / 2)
         y = -target.rect.y + int(self.sizes[1] / 2)
