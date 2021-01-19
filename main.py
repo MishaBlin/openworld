@@ -1,6 +1,7 @@
 import sys
 from sprites import *
 from map_render import *
+from settings import *
 from os import path, listdir
 import random
 import ctypes
