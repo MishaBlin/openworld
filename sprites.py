@@ -2,9 +2,11 @@ import pygame as pg
 from settings import *
 import pytweening as tween
 
+# vector for velocity
 vec = pg.math.Vector2
 
 
+# animation function
 def __create_animation__(obj, speed, name):
     obj.current_sprite += speed
 
@@ -15,11 +17,14 @@ def __create_animation__(obj, speed, name):
     obj.image = name[int(obj.current_sprite)]
 
 
+# creating player sprite
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        # group init
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
+        # loading animations from main game
         self.animation = 'standing'
         self.animation_standing = game.standing_animation
         self.animation_right = game.moving_right
@@ -29,7 +34,6 @@ class Player(pg.sprite.Sprite):
         self.animation_forward_left = game.moving_left_up
         self.animation_down_left = game.moving_down_left
         self.animation_down = game.moving_down
-        self.animation_death = game.death_animation
         self.animation_down_right = game.moving_down_right
         self.house_animation = game.house
         self.housing_animation = game.housing_animation
@@ -42,12 +46,14 @@ class Player(pg.sprite.Sprite):
         self.a = True
         self.s = True
 
+        # player speed init
         self.rect = self.image.get_rect()
         self.vel = vec(0, 0)
         self.y = y
         self.pos = vec(x, y)
         self.speed = PLAYER_SPEED
 
+    # getting keys
     def get_keys(self):
         if not self.in_house:
             self.w = True
@@ -126,6 +132,7 @@ class Player(pg.sprite.Sprite):
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071
 
+    # checking for occupation with object
     def occupied_with_object(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
@@ -146,9 +153,11 @@ class Player(pg.sprite.Sprite):
                 self.vel.y = 0
                 self.rect.y = self.pos.y
 
+    # adding speed by food
     def add_speed(self, amount):
         self.speed += amount
 
+    # updating the player
     def update(self):
         self.get_keys()
         self.pos += self.vel * self.game.dt
@@ -160,6 +169,7 @@ class Player(pg.sprite.Sprite):
             self.animation = 'standing'
             self.animate = True
 
+        # animating the player
         if self.animate:
             if self.animation == 'right':
                 __create_animation__(self, 0.05, self.animation_right)
@@ -188,9 +198,6 @@ class Player(pg.sprite.Sprite):
             if self.animation == 'down':
                 __create_animation__(self, 0.05, self.animation_down)
 
-            if self.animation == 'death':
-                __create_animation__(self, 0.05, self.animation_death)
-
             if self.animation == 'housing':
                 self.current_sprite += 0.15
 
@@ -200,6 +207,7 @@ class Player(pg.sprite.Sprite):
                 self.image = self.housing_animation[int(self.current_sprite)]
 
 
+# obstacles init
 class Obstacle(pg.sprite.Sprite):
     def __init__(self, game, x, y, w, h):
         self.groups = game.walls
@@ -212,6 +220,7 @@ class Obstacle(pg.sprite.Sprite):
         self.rect.y = y
 
 
+# item init
 class Item(pg.sprite.Sprite):
     def __init__(self, game, pos, type):
         self._layer = ITEMS_LAYER
@@ -227,6 +236,7 @@ class Item(pg.sprite.Sprite):
         self.step = 0
         self.direction = 1
 
+    # updating items
     def update(self):
         offset = BOB_RANGE * (self.tween(self.step / BOB_RANGE) - 0.5)
         self.rect.centery = self.pos[1] + offset * self.direction
